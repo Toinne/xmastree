@@ -11,13 +11,15 @@
         var parsedPoints = [];
 
         for (var key in points) {
-            var xy  = points[key].split(',');
+            if (points.hasOwnProperty(key)) {
+                var xy  = points[key].split(',');
 
-            // we don't care about digit after the comma bit more random
-            xy[0] = parseInt(xy[0], 10);
-            xy[1] = parseInt(xy[1], 10);
+                // we don't care about digit after the comma bit more random
+                xy[0] = parseInt(xy[0], 10);
+                xy[1] = parseInt(xy[1], 10);
 
-            parsedPoints.push(xy);
+                parsedPoints.push(xy);
+            }
         }
 
         return parsedPoints;
@@ -42,7 +44,7 @@
      */
     var createCircle = function(width, height, radius) {
         return {
-            cx : randPoint(105, 720),
+            cx : randPoint(0, width),
             cy : randPoint(0, height),
             r: radius
         }
@@ -82,8 +84,10 @@
      */
     var isColliding = function(node, nodes) {
         for (var j in nodes) {
-            if (Math.pow(node.cx - nodes[j].cx, 2) + Math.pow(node.cy - nodes[j].cy, 2) <= Math.pow(node.r + nodes[j].r, 2)) {
-                return true;
+            if (nodes.hasOwnProperty(j)) {
+                if (Math.pow(node.cx - nodes[j].cx, 2) + Math.pow(node.cy - nodes[j].cy, 2) <= Math.pow(node.r + nodes[j].r, 2)) {
+                    return true;
+                }
             }
         }
 
