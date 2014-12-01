@@ -17,7 +17,7 @@
         "name" : "instagram",
         "description" : "of engagor users actively use instagram",
         "color" : "#A071A5",
-        "count" : "6",
+        "count" : "8",
         "value" : "5"
     },
     {
@@ -52,7 +52,7 @@
         "name" : "customers",
         "description" : "engagor customers",
         "color" : "#DCF2CC",
-        "count" : "90",
+        "count" : "35",
         "value" : "5"
     }
 ]

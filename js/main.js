@@ -105,6 +105,7 @@
      */
     var createNodesFromMetric = function(metric, placedNodes, maxX, maxY, lines) {
         var collision = false,
+            createdNodes = {}, // nodes need to be an object to preserve unique key
             loops = 0, circle;
 
         if (!placedNodes) {
@@ -126,9 +127,29 @@
             circle.color = metric.color;
 
             placedNodes.push(circle);
+            createdNodes[placedNodes.length] = circle;
         }
 
-        return placedNodes;
+        return {
+            placedNodes : placedNodes,
+            createdNodes : createdNodes
+        };
+    };
+
+    /**
+     * Because we fetch the data initially we need to trick d3 into thinking data was appended
+     * @param allData
+     * @param requestedData
+     * @returns {*}
+     */
+    var fakeNewData = function (allData, requestedData) {
+        for (var key in requestedData) {
+            if (requestedData.hasOwnProperty(key)) {
+                allData.push(requestedData[key]);
+            }
+        }
+
+        return allData;
     };
 
     // Select the svg element
@@ -142,20 +163,44 @@
     d3.json("./data/engagorTeam.json", function(error, json) {
         if (error) return console.warn(error);
 
-        var nodes = [];
+        var placedNodes = [],
+            allNodes = [],
+            nodes = [];
 
         for (var key in json) {
             if  (json.hasOwnProperty(key)) {
-                nodes = createNodesFromMetric(json[key], nodes, 800, 800, lines);
+                allNodes = createNodesFromMetric(json[key], placedNodes, 800, 800, lines);
+                placedNodes = allNodes.placedNodes;
+                nodes[key] = allNodes.createdNodes;
             }
         }
 
-        svg.selectAll("circle")
-            .data(nodes.slice(1))
-            .enter().append("circle")
-            .attr("r", function(d) { return d.r; })
-            .attr("cx", function(d) { return d.cx; })
-            .attr("cy", function(d) { return d.cy; })
-            .style("fill", function(d, i) { return d.color });
+        var treeData = [];
+        var loop = 0;
+
+        for (var x in json) {
+            window.setTimeout(function () {
+                treeData = fakeNewData(treeData, nodes[loop]);
+
+                var circles = svg.selectAll("circle")
+                    .data(treeData);
+
+                circles.enter().append("circle")
+                    .attr("r", function(d) { return d.r; })
+                    .attr("cx", function(d) { return d.cx; })
+                    .attr("cy", function(d) { return d.cy; })
+                    .style("fill", function(d, i) { return d.color });
+
+                circles
+                    .attr("r", function(d) { return d.r; })
+                    .attr("cx", function(d) { return d.cx; })
+                    .attr("cy", function(d) { return d.cy; })
+                    .style("fill", function(d, i) { return d.color });
+
+                circles.exit();
+
+                loop++;
+            }, 1000 * x);
+        }
     });
 }(d3));
