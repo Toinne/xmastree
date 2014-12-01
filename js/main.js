@@ -118,7 +118,7 @@
                 collision = false;
                 circle = createCircle(maxX, maxY, parseInt(metric.value, 10));
                 collision = isColliding(circle, placedNodes);
-                if (loops > 600) {
+                if (loops > 1000) {
                     break;
                 }
             } while (!pointInPolygon(circle, lines) || collision);
@@ -184,18 +184,16 @@
 
                 var circles = svg.selectAll("circle")
                     .data(treeData);
-
                 circles.enter().append("circle")
                     .attr("r", function(d) { return d.r; })
-                    .attr("cx", function(d) { return d.cx; })
-                    .attr("cy", function(d) { return d.cy; })
-                    .style("fill", function(d, i) { return d.color });
-
-                circles
-                    .attr("r", function(d) { return d.r; })
-                    .attr("cx", function(d) { return d.cx; })
-                    .attr("cy", function(d) { return d.cy; })
-                    .style("fill", function(d, i) { return d.color });
+                    .attr("cx", function(d) { return 900 })
+                    .attr("cy", function(d) { return 400 - d.r; })
+                    .style("fill", function(d) { return d.color })
+                    .transition()
+                        .delay(function(d, i) { return 100 })
+                        .duration(300)
+                        .attr('cx', function(d) { return d.cx; })
+                        .attr('cy', function(d) { return d.cy; });
 
                 circles.exit();
 
