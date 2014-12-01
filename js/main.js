@@ -94,6 +94,36 @@
         return false;
     };
 
+    var createNodesFromMetric = function(metric, placedNodes, maxX, maxY, lines) {
+        var collision = false,
+            loops = 0,
+            node, circle;
+
+
+        if (!placedNodes) {
+            placedNodes = [];
+        }
+
+        for (var x = 0 ; x < parseInt(metric.count, 10) ; x++) {
+            do {
+                loops++;
+                collision = false;
+                circle = createCircle(maxX, maxY, parseInt(metric.value, 10));
+                collision = isColliding(circle, placedNodes);
+                if (loops > 600) {
+                    break;
+                }
+            } while (!pointInPolygon(circle, lines) || collision);
+            loops = 0;
+
+            circle.color = metric.color;
+
+            placedNodes.push(circle);
+        }
+
+        return placedNodes;
+    };
+
     // Select the svg element
     var svg = d3.selectAll("svg");
 
@@ -102,68 +132,23 @@
     var pointsString = polygon.attr("points");
     var lines = parsePoints(pointsString);
 
-    var placedNodes = [];
+    d3.json("./data/engagorTeam.json", function(error, json) {
+        if (error) return console.warn(error);
 
-    var nodes = d3.range(340).map(function(d, i) {
-        var color;
-        var radius;
+        var nodes = [];
 
-        // todo change to mapping with data
-        if (i <= 15) {
-            color = '#3CB9BB';
-            radius = 12;
-        }
-        else if  (i <= 30) {
-            color = '#D03C60';
-            radius = 15;
-        }
-        else if (i <= 60) {
-            color = '#618853';
-            radius = 14;
-        }
-        else if (i <= 100) {
-            color = '#A072A3';
-            radius = 12;
-        }
-        else if (i <= 140) {
-            color = '#A2BB94';
-            radius = 11;
-        }
-        else if (i <= 180) {
-            color = '#B2CCA7';
-            radius = 11;
-        }
-        else {
-            color = '#C9E1C1';
-            radius = 10;
+        for (var key in json) {
+            if  (json.hasOwnProperty(key)) {
+                nodes = createNodesFromMetric(json[key], nodes, 800, 800, lines);
+            }
         }
 
-        var collision = false;
-
-        do {
-            collision = false;
-            var circle = createCircle(800, 800, radius);
-            collision = isColliding(circle, placedNodes);
-        } while (!pointInPolygon(circle, lines) || collision);
-
-        var node = {
-            r: circle.r,
-            cx: circle.cx,
-            cy: circle.cy,
-            color: color
-        };
-
-        placedNodes.push(node);
-
-        return node;
+        svg.selectAll("circle")
+            .data(nodes.slice(1))
+            .enter().append("circle")
+            .attr("r", function(d) { return d.r; })
+            .attr("cx", function(d) { return d.cx; })
+            .attr("cy", function(d) { return d.cy; })
+            .style("fill", function(d, i) { return d.color });
     });
-
-    svg.selectAll("circle")
-        .data(nodes.slice(1))
-        .enter().append("circle")
-        .attr("r", function(d) { return d.r; })
-        .attr("cx", function(d) { return d.cx; })
-        .attr("cy", function(d) { return d.cy; })
-        .style("fill", function(d, i) { return d.color });
-
-}($, d3));
+}(d3));
