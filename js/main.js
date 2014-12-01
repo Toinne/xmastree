@@ -94,11 +94,18 @@
         return false;
     };
 
+    /**
+     * Create nodes for the given metric
+     * @param metric
+     * @param placedNodes
+     * @param maxX
+     * @param maxY
+     * @param lines
+     * @returns {*}
+     */
     var createNodesFromMetric = function(metric, placedNodes, maxX, maxY, lines) {
         var collision = false,
-            loops = 0,
-            node, circle;
-
+            loops = 0, circle;
 
         if (!placedNodes) {
             placedNodes = [];
