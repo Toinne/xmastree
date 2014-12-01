@@ -1,6 +1,11 @@
 (function () {
     "use strict";
 
+    /**
+     * Converts the svg polygon to an array of points
+     * @param pointsString
+     * @returns {Array}
+     */
     var parsePoints = function (pointsString) {
         var points = pointsString.split(' ');
         var parsedPoints = [];
@@ -18,24 +23,43 @@
         return parsedPoints;
     };
 
+    /**
+     * Generates a random value
+     * @param min
+     * @param max
+     * @returns {*}
+     */
     var randPoint = function(min, max) {
         return Math.floor(Math.random() * (max-min)) + min;
     };
 
-    var randCircleCoordinate = function(width, height, radius) {
+    /**
+     * Creates a circle with random coordinates
+     * @param width of the space
+     * @param height of the space
+     * @param radius of the circle
+     * @returns {{cx, cy, r: *}}
+     */
+    var createCircle = function(width, height, radius) {
         return {
-            x : randPoint(105, 720),
-            y : randPoint(0, height),
-            radius: radius
+            cx : randPoint(105, 720),
+            cy : randPoint(0, height),
+            r: radius
         }
     };
 
+    /**
+     * Checks if the given point resides in the polygon
+     * ray-casting algorithm based on
+     * http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+     * @param point
+     * @param vs polygon as an array of points
+     * @returns {boolean}
+     */
     var pointInPolygon = function(point, vs) {
-        // ray-casting algorithm based on
-        // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
         var xi, xj, i, intersect, j, yi, yj,
-            x = point.x,
-            y = point.y,
+            x = point.cx,
+            y = point.cy,
             inside = false;
         for (i = 0, j = vs.length - 1; i < vs.length; j = i++) {
             xi = vs[i][0],
@@ -49,10 +73,16 @@
         return inside;
     };
 
-    // todo try with quadtree
+    /**
+     * Checked if a node is colliding with other nodes
+     * todo try with quadtree
+     * @param node
+     * @param nodes
+     * @returns {boolean}
+     */
     var isColliding = function(node, nodes) {
         for (var j in nodes) {
-            if (Math.pow(node.x - nodes[j].x, 2) + Math.pow(node.y - nodes[j].y, 2) <= Math.pow(node.radius + nodes[j].radius, 2)) {
+            if (Math.pow(node.cx - nodes[j].cx, 2) + Math.pow(node.cy - nodes[j].cy, 2) <= Math.pow(node.r + nodes[j].r, 2)) {
                 return true;
             }
         }
@@ -70,15 +100,11 @@
 
     var placedNodes = [];
 
-    console.log(pointInPolygon({
-        x: 256,
-        y: 767
-    }, lines));
-
-    var nodes = d3.range(350).map(function(d, i) {
+    var nodes = d3.range(340).map(function(d, i) {
         var color;
         var radius;
 
+        // todo change to mapping with data
         if (i <= 15) {
             color = '#3CB9BB';
             radius = 12;
@@ -112,14 +138,14 @@
 
         do {
             collision = false;
-            var cor = randCircleCoordinate(800, 800, radius);
-            collision = isColliding(cor, placedNodes);
-        } while (!pointInPolygon(cor, lines) || collision);
+            var circle = createCircle(800, 800, radius);
+            collision = isColliding(circle, placedNodes);
+        } while (!pointInPolygon(circle, lines) || collision);
 
         var node = {
-            radius: cor.radius,
-            x: cor.x,
-            y: cor.y,
+            r: circle.r,
+            cx: circle.cx,
+            cy: circle.cy,
             color: color
         };
 
@@ -131,9 +157,9 @@
     svg.selectAll("circle")
         .data(nodes.slice(1))
         .enter().append("circle")
-        .attr("r", function(d) { return d.radius; })
-        .attr("cx", function(d) { return d.x; })
-        .attr("cy", function(d) { return d.y; })
+        .attr("r", function(d) { return d.r; })
+        .attr("cx", function(d) { return d.cx; })
+        .attr("cy", function(d) { return d.cy; })
         .style("fill", function(d, i) { return d.color });
 
 }($, d3));
