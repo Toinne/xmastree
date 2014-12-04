@@ -34,7 +34,9 @@
         var rnd = Math.floor(Math.random() * (max-min)) + min;
 
         if (factor) {
-            rnd += Math.random() * ((max-min) / factor);
+            if (factor < max) {
+                rnd -= Math.random() * factor + factor;
+            }
         }
 
         return rnd;
@@ -182,29 +184,23 @@
         }
 
         var treeData = [];
-        var loop = 0;
+        window.addEventListener('nextSet', function (e) {
+            var countBefore = treeData.length;
+            treeData = fakeNewData(treeData, nodes[e.detail]);
+            var circles = svg.selectAll("circle")
+                .data(treeData);
+            circles.enter().append("circle")
+                .attr("r", function(d) { return d.r; })
+                .attr("cx", function(d) { return 500 + d.r })
+                .attr("cy", function(d) { return 275 - d.r; })
+                .style("fill", function(d) { return d.color })
+                .transition()
+                .delay(function(d, i) { return (i - countBefore) * 100 })
+                .duration(900)
+                .attr('cx', function(d) { return d.cx; })
+                .attr('cy', function(d) { return d.cy; });
 
-        for (var x in json) {
-            window.setTimeout(function () {
-                treeData = fakeNewData(treeData, nodes[loop]);
-
-                var circles = svg.selectAll("circle")
-                    .data(treeData);
-                circles.enter().append("circle")
-                    .attr("r", function(d) { return d.r; })
-                    .attr("cx", function(d) { return 400 })
-                    .attr("cy", function(d) { return 500 - d.r; })
-                    .style("fill", function(d) { return d.color })
-                    .transition()
-                        .delay(function(d, i) { return 100 })
-                        .duration(300)
-                        .attr('cx', function(d) { return d.cx; })
-                        .attr('cy', function(d) { return d.cy; });
-
-                circles.exit();
-
-                loop++;
-            }, 1000 * x);
-        }
+            circles.exit();
+        }, false);
     });
 }(d3));

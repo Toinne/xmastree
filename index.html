@@ -18,39 +18,22 @@
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
 
         <style type="text/css">
-            .clearfix:after {
-                content: ".";
-                display: block;
-                clear: both;
-                visibility: hidden;
-                line-height: 0;
-                height: 0;
-            }
-
-            .clearfix {
-                display: inline-block;
-            }
-
-            html[xmlns] .clearfix {
-                display: block;
-            }
-
-            * html .clearfix {
-                height: 1%;
-            }
-
             section.tree-container, html, body {
                 height: 100%;
                 background-color: #414F58;
+                overflow: hidden;
             }
             section.tree-container {
                 clear: both;
                 display: block;
                 margin-top: 0;
+                position: relative;
+                width: 70%;
+                float: left;
             }
             section.tree-container svg {
                 display: block;
-                margin: 30px auto 0 auto;
+                margin: 30px 0 0 auto;
             }
             section.tree-container section.circle {
                 position: absolute;
@@ -63,15 +46,141 @@
                 border-radius: 100%;
                 background-color: #f4f4f4;
             }
+            section.text-container {
+                width: 30%;
+                float: left;
+                height: 100%;
+                position: relative;
+            }
+            section.slide {
+                height: 300px;
+                margin-top: -150px;
+                width: 100%;
+                position: absolute;
+                box-sizing: border-box;
+                padding: 2%;
+                top: 150%;
+            }
+
+            section.slide:nth-of-type(1) {
+                top: 50%;
+            }
+
+            section.slide.in {
+                top: 50%;
+                -webkit-animation: slideIn 3s linear;
+            }
+
+            section.slide.out {
+                top: -50%;
+                -webkit-animation: slideOut 3s linear;
+            }
+
+            /* Standard syntax */
+            @-webkit-keyframes slideIn {
+                from {top: 150%;}
+                to {top: 50%;}
+            }
+
+            /* Standard syntax */
+            @-webkit-keyframes slideOut {
+                from {top: 50%;}
+                to {top: -50%;}
+            }
+
+            section.slide p {
+                margin: 0;
+                position: relative;
+            }
+            section.number p {
+                font-size: 100px;
+                font-weight: bold;
+                color: #3CBAB9;
+            }
+            section.explanation {
+                height: 78px;
+            }
+            div.line {
+                height: 4px;
+                /* width set via javascript */
+                /*width: 200px;*/
+                /* idem */
+                /*margin-left: -244px;*/
+                position: absolute;
+                top: 50%;
+                margin-top: -2px;
+                transition:all 1s ease;
+            }
+            div.line.active {
+                background-position:right bottom !important;
+            }
+            div.line[data-id="1"] {
+                background: linear-gradient(to right, #414F58 50%, #3CBAB9 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            div.line[data-id="2"] {
+                background: linear-gradient(to right, #414F58 50%, #CC3B5C 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            div.line[data-id="3"] {
+                background: linear-gradient(to right, #414F58 50%, #A071A5 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            div.line[data-id="4"] {
+                background: linear-gradient(to right, #414F58 50%, #4C6756 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            div.line[data-id="5"] {
+                background: linear-gradient(to right, #414F58 50%, #7CAF6D 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            div.line[data-id="6"] {
+                background: linear-gradient(to right, #414F58 50%, #B2CCA7 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            div.line[data-id="7"] {
+                background: linear-gradient(to right, #414F58 50%, #CBE0BF 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            div.line[data-id="8"] {
+                background: linear-gradient(to right, #414F58 50%, #DCF2CC 50%);
+                background-size: 200% 100%;
+                background-position:left bottom;
+            }
+            section.explanation p {
+                text-transform: uppercase;
+                font-size: 28px;
+                font-weight: bold;
+                color: #F4F4F4;
+            }
+            section.explanation span.color {
+                color: #3CBAB9;
+            }
         </style>
     </head>
     <body>
 
-    <section class="tree-container clearfix">
-        <section class="circle clearfix">
-            <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="400px" height="500px">
+    <section class="tree-container">
+        <section class="circle">
+            <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="500px" height="500px">
                 <polygon fill="none" stroke="#000000" stroke-width="0" points="28.72,413.9 162.75,428.96 168.41,494.85 237.59,494.85 243.25,428.96 377.28,413.9 387.67,380.95 325.37,283.99 339.53,269.87 333.87,217.16 295.17,170.09 294.22,151.27 303.66,144.68 203,3 102.34,144.68 111.78,151.27 110.83,170.09 72.13,217.16 66.47,269.87 80.63,283.99 55.667,313.003 41.667,361.67 28.72,410.336 "/>
             </svg>
+        </section>
+    </section>
+    <section class="text-container">
+        <section data-id="0" class="slide active">
+            <section class="explanation">
+                <p>
+                    Press the spacebar to continue
+                </p>
+            </section>
         </section>
     </section>
 
