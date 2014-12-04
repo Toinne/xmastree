@@ -4,55 +4,55 @@
         "description" : "users on average in each engagor account",
         "color" : "#3CBAB9",
         "count" : "6",
-        "value" : "17"
+        "value" : "12"
     },
     {
         "name" : "topics",
         "description" : "topics on average in each engagor account",
         "color" : "#CC3B5C",
         "count" : "6",
-        "value" : "19"
+        "value" : "14"
     },
     {
         "name" : "instagram",
         "description" : "of engagor users actively use instagram",
         "color" : "#A071A5",
         "count" : "8",
-        "value" : "14"
+        "value" : "12"
     },
     {
         "name" : "countries",
         "description" : "countries where engagor has customers",
         "color" : "#4C6756",
         "count" : "28",
-        "value" : "14"
+        "value" : "9"
     },
     {
         "name" : "coffee",
         "description" : "cups of coffee drunk daily at the office",
-        "color" : "#3CBAB9",
+        "color" : "#7CAF6D",
         "count" : "31",
-        "value" : "13"
+        "value" : "6"
     },
     {
         "name" : "employees",
         "description" : "engagor employees",
         "color" : "#B2CCA7",
         "count" : "33",
-        "value" : "14"
+        "value" : "8"
     },
     {
         "name" : "interaction",
         "description" : "interaction with consumers in 10 months",
         "color" : "#CBE0BF",
-        "count" : "90",
-        "value" : "13"
+        "count" : "180",
+        "value" : "5"
     },
     {
         "name" : "customers",
         "description" : "engagor customers",
         "color" : "#DCF2CC",
-        "count" : "35",
-        "value" : "13"
+        "count" : "70",
+        "value" : "6"
     }
 ]

@@ -15,8 +15,8 @@
                 var xy  = points[key].split(',');
 
                 // we don't care about digit after the comma bit more random
-                xy[0] = parseInt(xy[0], 10);
-                xy[1] = parseInt(xy[1], 10);
+                xy[0] = parseFloat(xy[0], 10);
+                xy[1] = parseFloat(xy[1], 10);
 
                 parsedPoints.push(xy);
             }
@@ -42,10 +42,10 @@
      * @param radius of the circle
      * @returns {{cx, cy, r: *}}
      */
-    var createCircle = function(width, height, radius) {
+    var createCircle = function(minWidth, minHeight, width, height, radius) {
         return {
-            cx : randPoint(0, width),
-            cy : randPoint(0, height),
+            cx : randPoint(minWidth, width),
+            cy : randPoint(minHeight, height),
             r: radius
         }
     };
@@ -103,7 +103,7 @@
      * @param lines
      * @returns {*}
      */
-    var createNodesFromMetric = function(metric, placedNodes, maxX, maxY, lines) {
+    var createNodesFromMetric = function(metric, placedNodes, minX, minY, maxX, maxY, lines) {
         var collision = false,
             createdNodes = {}, // nodes need to be an object to preserve unique key
             loops = 0, circle;
@@ -116,9 +116,9 @@
             do {
                 loops++;
                 collision = false;
-                circle = createCircle(maxX, maxY, parseInt(metric.value, 10));
+                circle = createCircle(minX, minY, maxX, maxY, parseInt(metric.value, 10));
                 collision = isColliding(circle, placedNodes);
-                if (loops > 1000) {
+                if (loops > 1500) {
                     break;
                 }
             } while (!pointInPolygon(circle, lines) || collision);
@@ -154,6 +154,7 @@
 
     // Select the svg element
     var svg = d3.selectAll("svg");
+    var box = svg.node().getBBox();
 
     // Create series of points from our shape
     var polygon = d3.selectAll("polygon");
@@ -169,7 +170,7 @@
 
         for (var key in json) {
             if  (json.hasOwnProperty(key)) {
-                allNodes = createNodesFromMetric(json[key], placedNodes, 800, 800, lines);
+                allNodes = createNodesFromMetric(json[key], placedNodes, box.x, box.y, box.width + box.x, box.height + box.y, lines);
                 placedNodes = allNodes.placedNodes;
                 nodes[key] = allNodes.createdNodes;
             }
@@ -186,8 +187,8 @@
                     .data(treeData);
                 circles.enter().append("circle")
                     .attr("r", function(d) { return d.r; })
-                    .attr("cx", function(d) { return 900 })
-                    .attr("cy", function(d) { return 400 - d.r; })
+                    .attr("cx", function(d) { return 400 })
+                    .attr("cy", function(d) { return 500 - d.r; })
                     .style("fill", function(d) { return d.color })
                     .transition()
                         .delay(function(d, i) { return 100 })
