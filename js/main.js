@@ -14,7 +14,6 @@
             if (points.hasOwnProperty(key)) {
                 var xy  = points[key].split(',');
 
-                // we don't care about digit after the comma bit more random
                 xy[0] = parseFloat(xy[0], 10);
                 xy[1] = parseFloat(xy[1], 10);
 
