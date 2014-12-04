@@ -31,8 +31,14 @@
      * @param max
      * @returns {*}
      */
-    var randPoint = function(min, max) {
-        return Math.floor(Math.random() * (max-min)) + min;
+    var randPoint = function(min, max, factor) {
+        var rnd = Math.floor(Math.random() * (max-min)) + min;
+
+        if (factor) {
+            rnd += Math.random() * ((max-min) / factor);
+        }
+
+        return rnd;
     };
 
     /**
@@ -45,7 +51,7 @@
     var createCircle = function(minWidth, minHeight, width, height, radius) {
         return {
             cx : randPoint(minWidth, width),
-            cy : randPoint(minHeight, height),
+            cy : randPoint(minHeight, height, radius),
             r: radius
         }
     };
